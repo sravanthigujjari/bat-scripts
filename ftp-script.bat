@@ -48,6 +48,5 @@ goto done
 :file_not_found
 echo Could Not Find Files. %DATE% %TIME% > %logerror%
 echo Could not find files.
-REM exit 99
 
 :done
