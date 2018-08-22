@@ -34,7 +34,9 @@ psftp ftp.scriptrelief.com -l informaticauser -pw MS#@8AKqjSD2$t7z -P 22 -b %PSF
 if exist %REMOTE_FILE_NAME% (
     rename %REMOTE_FILE_NAME% %RENAMED_FILE%
     move %RENAMED_FILE% D:\data\B2B2C_Actions\archive
+    del %PSFTP_FILE%
 ) else (
+    del %PSFTP_FILE%
     goto file_not_found
 )
 
