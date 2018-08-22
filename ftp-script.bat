@@ -1,31 +1,41 @@
+REM pick up file from ftp server:
+REM 
+REM username: informaticauser
+REM Password: MS#@8AKqjSD2$t7z for that FTP user
+REM server name: ftp.scriptrelief.com 
+REM port 22
+REM 
+REM file name: sc_salesrepsegment.csv
+REM 
+REM place the above file to this folder:
+REM D:\data\B2B2C_Actions
+REM 
+REM rename: sc_salesrepsegment_current_date
+REM 
+REM archive:
+REM archive renamed file to below folder
+REM D:\data\B2B2C_Actions\archive
+
 @echo off
 
 set batchfile=%~n0
 call D:\app\infa\batch\initialize.bat
 
-set processfile=D:\data\SalesRepKit\YYYYMMDD_OUT_SC_SalesRepKitFulfillment.csv
-set renamed=%DATE_YYYY%%DATE_MM%%DATE_DD%_OUT_SC_SalesRepKitFulfillment.csv
-set archive=D:\data\SalesRepKit\Archive
-REM set dest=\\prodftp\FTPData\PartnerData\SingleCare\SalesRepKit
 set PSFTP_FILE=D:\app\infa\batch\FTPScripts\PSFTP_sc_Export_SalesRepKitFulfillment.txt
+set REMOTE_FILE_LOCATION=<location-on-remote-server>
+set REMOTE_FILE_NAME=<file-on-remote-server-goes-here-with-complete-file-path>
+set RENAMED_FILE=sc_salesrepsegment_%DATE_YYYY%%DATE_MM%%DATE_DD%.csv
 
-if exist %processfile% (
-	echo Found process file, attempting to rename >> %loginfo%
-	rename %processfile% %renamed% >> %loginfo%
-) else (
-	goto file_not_found
-)
+echo %REMOTE_FILE_LOCATION% > %PSFTP_FILE%
+echo get %REMOTE_FILE_NAME% >> %PSFTP_FILE%
+cd D:\data\B2B2C_Actions
+psftp ftp.scriptrelief.com -l informaticauser -pw MS#@8AKqjSD2$t7z -P 22 -b %PSFTP_FILE% -be >> %loginfo%
 
-if exist D:\data\SalesRepKit\%renamed% (
-	REM copy D:\data\SalesRepKit\%renamed% %dest% /Y
-	if exist %PSFTP_FILE% del %PSFTP_FILE%
-	echo cd /PartnerData/SingleCare/SalesRepKit >> %PSFTP_FILE%
-	echo put D:\data\SalesRepKit\%renamed% >> %PSFTP_FILE%
-	psftp ftp.scriptrelief.com -l informaticauser -pw MS#@8AKqjSD2$t7z -P 22 -b %PSFTP_FILE% -be >> %loginfo%
-	move /y D:\data\SalesRepKit\%renamed% %archive%
-	goto got_file
+if exist %REMOTE_FILE_NAME% (
+    rename %REMOTE_FILE_NAME% %RENAMED_FILE%
+    move %RENAMED_FILE% D:\data\B2B2C_Actions\archive
 ) else (
-	goto file_not_found
+    goto file_not_found
 )
 
 :got_file
@@ -39,30 +49,3 @@ echo Could not find files.
 REM exit 99
 
 :done
-
-
-
-
------
-
-pick up file from ftp server:
-
-
-username: informaticauser
-Password: MS#@8AKqjSD2$t7z for that FTP user
-server name: ftp.scriptrelief.com 
-port 22
-
-
-file name: sc_salesrepsegment.csv
-
-
-place the above file to this folder:
-D:\data\B2B2C_Actions
-
-rename: sc_salesrepsegment_current_date
-
-archive:
-archive renamed file to below folder
-D:\data\B2B2C_Actions\archive
-
