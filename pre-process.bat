@@ -9,7 +9,7 @@ Run SP
 Rename
 archive
 
----Batch file we wrote----
+REM Batch file we wrote----
 set batchfile=%~n0
 call D:\app\infa\batch\initialize.bat
 
