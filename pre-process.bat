@@ -8,6 +8,7 @@ set RENAMED_FILE=sc_salesrepsegment_%DATE_YYYY%%DATE_MM%%DATE_DD%.csv
 
 echo cd %REMOTE_FILE_LOCATION% > %PSFTP_FILE%
 echo get %REMOTE_FILE_NAME% >> %PSFTP_FILE%
+D:
 cd D:\data\B2B2C_Actions
 
 psftp ftp.scriptrelief.com -l informaticauser -pw MS#@8AKqjSD2$t7z -P 22 -b %PSFTP_FILE% -be >> %loginfo%
