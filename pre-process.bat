@@ -1,15 +1,3 @@
-Pre Processing commands:
-
-- get file from server (connect to server, get the file from server and put it in required location)
-and load to target table 
-
-Post Processing commands::
-
-Run SP
-Rename
-archive
-
-REM Batch file we wrote----
 set batchfile=%~n0
 call D:\app\infa\batch\initialize.bat
 
@@ -25,21 +13,8 @@ cd D:\data\B2B2C_Actions
 psftp ftp.scriptrelief.com -l informaticauser -pw MS#@8AKqjSD2$t7z -P 22 -b %PSFTP_FILE% -be >> %loginfo%
 
 if exist %REMOTE_FILE_NAME% (
-    
-sqlcmd -b -S simpleplace.singlecare.com -U mercatus3 -P S1ngl3MeNow -Q  "exec singlecare.dbo.a_ETL_SP_SalesRepSegment"
-REM sqlcmd.exe -S Simpleplace.SingleCare.com -U mercatus3 -P S1ngl3MeNow -d SingleCare /Q	
-	IF ERRORLEVEL 1 (
-		echo Error executing a_ETL_SP_SalesRepSegment >> %loginfo%   
-	) ELSE (
-		echo Success a_ETL_SP_SalesRepSegment >> %loginfo%
-	)
-	
-	rename %REMOTE_FILE_NAME% %RENAMED_FILE%
-    move %RENAMED_FILE% D:\data\B2B2C_Actions\archive
-    REM del %PSFTP_FILE%
-
+    goto got_file
 ) else (
-    REM del %PSFTP_FILE%
     goto file_not_found
 )
 
