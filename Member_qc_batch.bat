@@ -29,6 +29,7 @@ if exist %outputfile% (
 	D:
 	cd D:\data\inbound\MemberQC >> %loginfo%
 	del %RENAMED_FILE% >> %loginfo%
+    	move %outputfile% <TODO:give-archive-folder-here>
 	echo Completed Successfully > %logsuccess%
 	goto done
 
