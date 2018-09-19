@@ -1,24 +1,24 @@
 set batchfile=%~n0
 call D:\app\infa\batch\initialize.bat
 
-set PSFTP_FILE=D:\app\infa\batch\FTPScripts\PSFTP_sc_MemberReturn.txt
+set PSFTP_FILE=D:\app\infa\batch\FTPScripts\PSFTP_SCQC.txt
 set REMOTE_FILE_LOCATION=/ 
-set REMOTE_FILE_NAME=*_SC_MemberWeekly_ReturnFile
-set RENAMED_FILE=SC_MemberWeekly_ReturnFile.csv
+set REMOTE_FILE_NAME=*_SCQC
+set RENAMED_FILE=MEMBERQC.TXT
 
 D:
-cd D:\data\ReturnFileWeekly
+cd D:\data\inbound\MemberQC
 
-echo cd %REMOTE_FILE_LOCATION% > %PSFTP_FILE%
-echo prompt >> %PSFTP_FILE%
-echo mget %REMOTE_FILE_NAME%.zip >> %PSFTP_FILE%
+rem echo cd %REMOTE_FILE_LOCATION% > %PSFTP_FILE%
+rem echo prompt >> %PSFTP_FILE%
+ rem echo mget %REMOTE_FILE_NAME%.zip >> %PSFTP_FILE%
 
-psftp MSRF1RT@sftp.igxfer.com -i D:\app\infa\batch\Infogroup-MSRF1RT-private.ppk -P 22 -b %PSFTP_File% -be >> %loginfo%
+ rem psftp MSRF1RT@sftp.igxfer.com -i D:\app\infa\batch\Infogroup-MSRF1RT-private.ppk -P 22 -b %PSFTP_File% -be >> %loginfo%
 
 if exist %REMOTE_FILE_NAME%.zip (
 	 "c:\Program Files\7-Zip\7z.exe" e %REMOTE_FILE_NAME%.zip >> %loginfo%
 	  move %REMOTE_FILE_NAME%.zip .\Archive >> %loginfo%
-	rename %REMOTE_FILE_NAME% %RENAMED_FILE% >> %loginfo%
+	rename %REMOTE_FILE_NAME%.csv %RENAMED_FILE% >> %loginfo%
 ) else (
 	goto file_not_found
 )
