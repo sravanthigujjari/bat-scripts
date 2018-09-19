@@ -5,7 +5,7 @@
 set batchfile=%~n0
 call D:\app\infa\batch\initialize.bat
 set path=C:\Program Files (x86)\Febooti Command line email\;c:\windows\system32;%PATH%
-set outputfile=D:\memberqcresults_sc%DATE_YYYY%%DATE_MM%%DATE_DD%.txt
+set outputfile=D:\memberqcresults_sc_%DATE_YYYY%%DATE_MM%%DATE_DD%.txt
 set RENAMED_FILE=MEMBERQC.TXT
 
 rem if exist %outputfile% 
