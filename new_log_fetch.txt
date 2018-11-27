@@ -1,0 +1,2 @@
+D:\data\outbound\FetchExport\SC_Fetch_Export_Out.csv will be renamed 
+Sending files to s3 
