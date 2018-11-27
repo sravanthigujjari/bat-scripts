@@ -1,0 +1,4 @@
+Sent The File  Tue 11/27/2018 13:33:27.83 
+
+D:\data\outbound\FetchExport\SC_Fetch_Export_Out_20181127.zip
+        1 file(s) moved.
