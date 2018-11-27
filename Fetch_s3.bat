@@ -12,37 +12,19 @@ set S3_bucket_filepath=s3://rxsense-partner-data-qa/fetch/temp_archive/
 set path=%path%;c:\Program Files\7-Zip
 
 
-if exist %processfile% goto ZipEmailFile
-ren %processfile% %RENAMED_FILE%
-
-
-goto ExecuteUploadS3
-
-:ExecuteUploadS3
-
-echo Sending files to S3 bucket. >> %loginfo%
-
 if exist %PSFTP_FILE% del %PSFTP_FILE%
-rem echo cd /SingleCareSalesRepKit/SalesRepReturnfiles >> %PSFTP_FILE%
-echo put D:\data\outbound\FetchExport\SC_Fetch_Export_Out_%DATE_YYYY%%DATE_MM%%DATE_DD%.csv >> %PSFTP_FILE%
 
-aws s3 cp %PSFTP_FILE% %S3_bucket_filepath% --profile Fetch
-
-:ZipEmailFile
-
-7z.exe a "D:\data\outbound\FetchExport\SC_Fetch_Export_Out_%DATE_YYYY%%DATE_MM%%DATE_DD%.zip" "D:\data\outbound\FetchExport\%RENAMED_FILE%"
-
-febootimail -config "D:\app\infa\batch\febooti_config_sc_Fetch_test.txt"
-
-goto ArchiveFiles
-
-:ArchiveFiles
-
-move /Y D:\data\outbound\FetchExport\SC_Fetch_Export_Out_*.zip %archive% >> %loginfo%
-rem move /Y D:\data\outbound\FetchExport\%renamed% %archive% >> %loginfo%
-
-
-goto got_file
+if exist %processfile% (
+  ren %processfile% %RENAMED_FILE%
+  echo Sending files to S3 bucket. >> %loginfo%
+  aws s3 cp %RENAMED_FILE% %S3_bucket_filepath% --profile Fetch
+  7z.exe a "D:\data\outbound\FetchExport\SC_Fetch_Export_Out_%DATE_YYYY%%DATE_MM%%DATE_DD%.zip" "D:\data\outbound\FetchExport\%RENAMED_FILE%"
+  febootimail -config "D:\app\infa\batch\febooti_config_sc_Fetch_test.txt"
+  move /Y D:\data\outbound\FetchExport\SC_Fetch_Export_Out_*.zip %archive% >> %loginfo%
+  goto got_file
+) else (
+    goto file_not_found
+)
 
 :got_file
 echo Sent The File %source% %DATE% %TIME% > %logsuccess%
@@ -55,3 +37,4 @@ echo Could not find file.
 exit 99
 
 :done
+
