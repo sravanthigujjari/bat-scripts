@@ -1,0 +1,56 @@
+Follow exactly below instructions. this will read top lines from large file using java. 
+
+Copy below code into a file and save as "ReadFile.java". 
+
+// start of the file content. this is a comment. so copying this line is optional
+package com.large.file;
+
+import java.util.Scanner;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.FileInputStream;
+
+public class ReadFile {
+	public static void main(String s[]) throws Exception {
+		FileInputStream inputStream = null;
+		Scanner sc = null;
+		
+		int lines = Integer.parseInt(s[1]);
+		int count = 0;
+		
+		try {
+			inputStream = new FileInputStream(s[0]);
+			sc = new Scanner(inputStream, "UTF-8");
+			while (sc.hasNextLine()) {
+				String line = sc.nextLine();
+				System.out.println(line);
+				;
+				if(++count >= lines) break;
+			}
+			// note that Scanner suppresses exceptions
+			if (sc.ioException() != null) {
+				throw sc.ioException();
+			}
+		} finally {
+			if (inputStream != null) {
+				inputStream.close();
+			}
+			if (sc != null) {
+				sc.close();
+			}
+		}
+	}
+}
+// end of the file content. this is a comment. so copying this line is optional. do not copy beyond this line. 
+
+Hope you saved to c:\myprogram
+open command prompt and type following commands
+
+cd c:\myprogram
+javac -d . ReadFile.java
+java com.large.file.ReadFile "file-name" n
+
+file-name: give full path of the file if its in a different location. make sure you have double quotes around it. 
+n: give any number to read lines. in this case, 100.
+Example 
+java com.large.file.ReadFile "file-name" 100
