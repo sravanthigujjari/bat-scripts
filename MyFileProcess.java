@@ -6,6 +6,7 @@ cd c:\Users\sravanthi\Documents
 javac MyFileProcess.java
 java MyFileProcess REPLACE "D:\Legacy migration\ScriptCare\RxSense_ScriptCare_201907_No_CF.txt" "D:\Legacy migration\ScriptCare\output.txt"
 java MyFileProcess SPLIT "D:\Legacy migration\ScriptCare\RxSense_ScriptCare_201907_No_CF.txt" 15000
+java MyFileProcess MERGE "D:\Legacy migration\ScriptCare" CSV "OUTPUT.XML"
 */
 
 import java.io.BufferedReader;
@@ -13,16 +14,18 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 
 public class MyFileProcess {
 
 	public static void main(String s[]) {
 		
-/*		s = new String[3];
-		s[0] = "SPLIT";
-		s[1] = "C:\\Users\\harsh.LAPTOP-TPCB1OT7\\Desktop\\random-content.txt";
-		s[2] = "2000";*/
+		s = new String[4];
+		s[0] = "MERGE";
+		s[1] = "C:\\Users\\harsh.LAPTOP-TPCB1OT7\\Desktop";
+		s[2] = "csv"; 
+		s[3] = "OUTPUT2.TXT"; //*/
 		
 		String cmd = s[0];
 
@@ -31,10 +34,46 @@ public class MyFileProcess {
 				replaceInEachLine(s);
 			} else if (cmd == "SPLIT") {
 				splitIntoMultipleFiles(s);
+			} else if(cmd == "MERGE") {
+				mergeAllFiles(s);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private static void mergeAllFiles(String[] s) throws IOException {
+		String folderLoc = s[1];
+		String extn = s[2];
+		String outputFileName = s[3];
+		
+		File folder = new File(folderLoc);
+		System.out.println(folder.getAbsolutePath());
+		String[] list = folder.list(new MyFileNameFilter(extn));
+		
+		String output = folderLoc + "\\" + outputFileName; 
+		File outputFile = new File(output);
+		FileWriter fileWriter = new FileWriter(outputFile, true);
+		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+		
+		for(int i=0; i<list.length; i++) {
+			System.out.println(list[i]);
+			File currentFile = new File(folderLoc + "\\" + list[i]);
+			
+			
+			BufferedReader reader = new BufferedReader(new FileReader(currentFile));
+			String str;
+			while ((str = reader.readLine()) != null) {
+				bufferedWriter.write(str);
+				bufferedWriter.write("\n");
+			}
+			reader.close();
+			
+		}
+		
+		bufferedWriter.close();
+		fileWriter.close();
+		
 	}
 
 	private static void splitIntoMultipleFiles(String s[]) throws IOException {
@@ -127,3 +166,20 @@ public class MyFileProcess {
 	}
 
 }
+
+//FileNameFilter implementation
+	class MyFileNameFilter implements FilenameFilter {
+
+		private String extension;
+
+		public MyFileNameFilter(String extension) {
+			this.extension = extension.toLowerCase();
+		}
+
+		@Override
+		public boolean accept(File dir, String name) {
+			return name.toLowerCase().endsWith(extension);
+		}
+
+	}
+	
